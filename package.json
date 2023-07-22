@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "grammy": "^1.17.2",
+    "nodemon": "^3.0.1",
+    "translation-google": "^0.2.1"
+  },
+  "name": "translate_telegram_bot",
+  "version": "1.0.0",
+  "description": "Translate Telegram Bot",
+  "main": "main.js",
+  "repository": "https://github.com/ShohruhIlhomivich/translate_telegram_bot.git",
+  "author": "O'rolov Shohruh",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon ./main.js"
+  }
+}
