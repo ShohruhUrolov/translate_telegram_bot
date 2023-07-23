@@ -1,8 +1,9 @@
 {
   "dependencies": {
+    "@vitalets/google-translate-api": "^9.2.0",
     "grammy": "^1.17.2",
     "nodemon": "^3.0.1",
-    "translation-google": "^0.2.1"
+    "tesseract.js": "2.1.1"
   },
   "name": "translate_telegram_bot",
   "version": "1.0.0",

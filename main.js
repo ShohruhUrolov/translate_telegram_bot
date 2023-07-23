@@ -1,7 +1,9 @@
 const TOKEN = "6323657826:AAFnYlDoGFhCYZWtUp3EAciX4kjQh5SJoA8";
-const translate = require("translation-google");
+
 const { Bot } = require("grammy");
 const bot = new Bot(TOKEN);
+const { translate } = require("@vitalets/google-translate-api");
+const { MembershipCheck } = require("./middleware/channelMembershipCheck");
 const botProperty = {
   count: 0,
   isActive: true,
@@ -31,38 +33,22 @@ bot.command("help", (ctx) => {
   );
 });
 
-bot.on("message", async (ctx) => {
-  if (!botProperty.isActive)
-    return ctx.reply(`
-    Siz 🤖 botni faolsizlantirgansiz ❌\n\nBotni ishga tushirish uchun /start buyrug'ini yuboring
-    `);
-  const status = (
-    await bot.api.getChatMember("@english_dictionary_m", ctx.chat.id)
-  ).status;
+bot.on("message:text", async (ctx) => {
+  const isMember = await MembershipCheck(ctx, bot);
+  const message = ctx.update.message.text;
+  const chatId = ctx.chat.id;
+  if (!isMember)
+    return await ctx.reply(`
+   Eslatma ❗️❗️❗️ \n\n🤖 Botdan foydalanish uchun\n t.me/english_dictionary_m kanaliga a'zo bo'lishingiz kerek\n\nSo'ng qayta /start buyrug'ini bering
+   `);
 
-  if (
-    status === "member" ||
-    status === "administrator" ||
-    status === "creator"
-  ) {
-    const message = ctx.update.message?.text;
-
-    if (!message)
-      return await ctx.reply(
-        "Eslatma ❗️❗️❗️\n\nBotga matn yuboring hozirgi vaqtda boshqa formatdagi ma'lumotlar qabul qilmaydi ❌"
-      );
-    await bot.api.sendChatAction(ctx.chat.id, "typing");
-    translate(message, { to: "en" })
-      .then(async (res) => {
-        await ctx.reply(res.text);
-      })
-      .catch((err) => {
-        console.log("message errors --", err);
-      });
+  if (!botProperty.isActive) {
+    return ctx.reply(`Siz 🤖 botni faolsizlantirgansiz ❌\n\nBotni ishga tushirish uchun /start buyrug'ini yuboring
+`);
   } else {
-    await ctx.reply(`
-    Eslatma ❗️❗️❗️ \n\n🤖 Botdan foydalanish uchun\n t.me/english_dictionary_m kanaliga a'zo bo'lishingiz kerek\n\nSo'ng qayta /start buyrug'ini bering
-    `);
+    await bot.api.sendChatAction(chatId, "typing");
+    const translateText = (await translate(message, { to: "en" })).text;
+    ctx.reply(translateText);
   }
 });
 
