@@ -13,6 +13,7 @@
   "author": "O'rolov Shohruh",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon ./main.js"
+    "dev": "nodemon ./main.js",
+    "start": "node ./main.js"
   }
 }
